@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import BlogPost
+from .models import Post
 
 
-class BlogPostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        model = BlogPost
+        model = Post
         fields = ('title', 'content', 'user')
