@@ -1,13 +1,20 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostSerializer, LikeSerializer
+from .models import Post, Like
 from rest_framework import viewsets
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class LikeViewSet(viewsets.ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
