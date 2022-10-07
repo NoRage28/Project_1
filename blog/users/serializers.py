@@ -4,8 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class UserSignUpSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
