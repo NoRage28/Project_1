@@ -34,13 +34,13 @@ class LikeViewSet(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        Like.objects.get_or_create(**serializer.data)
+        like_post(user=request.user, post_id=serializer.data['post_id'])
         return Response("Like successfully added")
 
     def destroy(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        Like.objects.filter(**serializer.data).delete()
+        unlike_post(user=request.user, post_id=serializer.data['post_id'])
         return Response("Like successfully removed")
 
 
