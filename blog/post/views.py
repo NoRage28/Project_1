@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from rest_framework import permissions, status
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .serializers import PostSerializer
+from .serializers import PostSerializer, LikeSerializer
 from .models import Post, Like
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from blog.services import like_post, unlike_post
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -15,20 +15,32 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk):
-        user = request.user
-        post = get_object_or_404(Post, id=pk)
-        Like.objects.get_or_create(author=user, post=post)
+        like_post(user=request.user, post_id=pk)
         return Response("Like successfully added")
 
     @action(detail=True, methods=['post'])
     def unlike(self, request, pk):
-        user = request.user
-        post = get_object_or_404(Post, id=pk)
-        Like.objects.filter(author=user, post=post).delete()
+        unlike_post(user=request.user, post_id=pk)
         return Response("Like successfully removed")
 
-# class LikeViewSet(mixins.ListModelMixin,
-#                   viewsets.GenericViewSet):
-#     queryset = Like.objects.all()
-#     serializer_class = LikeSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class LikeViewSet(
+    viewsets.GenericViewSet,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin
+):
+    serializer_class = LikeSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        Like.objects.get_or_create(**serializer.data)
+        return Response("Like successfully added")
+
+    def destroy(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        Like.objects.filter(**serializer.data).delete()
+        return Response("Like successfully removed")
+
+

@@ -10,7 +10,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     liked_by = models.ManyToManyField(User, through='Like')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_owner')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
 
     def __str__(self):
         return f'{self.title}'

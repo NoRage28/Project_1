@@ -10,7 +10,10 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class LikeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Like
-#         fields = '__all__'
+class LikeSerializer(serializers.ModelSerializer):
+    author_id = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    post_id = serializers.IntegerField()
+
+    class Meta:
+        model = Like
+        fields = ['author_id', 'post_id']
