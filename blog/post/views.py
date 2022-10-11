@@ -47,7 +47,7 @@ class LikeViewSet(
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['get'], serializer_class=LikeAnalyticsSerializer)
-    def daily_count(self, request):
+    def analytics(self, request):
         date_from = self.request.query_params['date_from']
         date_to = self.request.query_params['date_to']
         queryset = Like.objects.filter(created_at__gte=date_from, created_at__lte=date_to).values(
