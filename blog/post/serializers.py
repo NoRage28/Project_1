@@ -16,3 +16,11 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ['post_id']
+
+
+class LikeAnalyticsSerializer(serializers.ModelSerializer):
+    likes_count = serializers.IntegerField()
+
+    class Meta:
+        model = Like
+        fields = ['likes_count', 'created_at']
