@@ -14,19 +14,7 @@ class UserSignUpView(generics.CreateAPIView):
     serializer_class = UserSignUpSerializer
 
 
-class UserActivityViewSet(mixins.ListModelMixin,
-                          mixins.RetrieveModelMixin,
-                          viewsets.GenericViewSet,
+class UserActivityViewSet(viewsets.ModelViewSet
                           ):
     queryset = UserActivity.objects.all()
     serializer_class = UserActivitySerializer
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = UserActivity.objects.filter(user_id=self.kwargs.get('pk'))
-        serializer = self.get_serializer(instance, many=True)
-        return Response(serializer.data)
