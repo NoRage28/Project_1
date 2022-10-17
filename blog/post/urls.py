@@ -5,3 +5,6 @@ router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='post')
 router.register(r'likes', LikeViewSet, basename='like')
 router.register(r'like_analytics', LikeAnalyticsViewSet, basename='like_analytics')
+
+urlpatterns = []
+urlpatterns += router.urls
