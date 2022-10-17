@@ -14,7 +14,7 @@ class UserSignUpView(generics.CreateAPIView):
     serializer_class = UserSignUpSerializer
 
 
-class UserActivityViewSet(viewsets.ModelViewSet
+class UserActivityViewSet(viewsets.ReadOnlyModelViewSet
                           ):
     queryset = UserActivity.objects.all()
     serializer_class = UserActivitySerializer
