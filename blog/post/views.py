@@ -15,12 +15,12 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], url_name='like_create')
     def like(self, request, pk):
         like_post(user=request.user, post_id=pk)
         return Response("Like successfully added")
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], url_name='like_remove')
     def unlike(self, request, pk):
         unlike_post(user=request.user, post_id=pk)
         return Response("Like successfully removed")
@@ -46,7 +46,7 @@ class LikeViewSet(
         unlike_post(user=request.user, post_id=serializer.data['post_id'])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['get'], serializer_class=LikeAnalyticsSerializer)
+    @action(detail=False, methods=['get'], serializer_class=LikeAnalyticsSerializer, url_name='like_analytics')
     def analytics(self, request):
         date_from = self.request.query_params['date_from']
         date_to = self.request.query_params['date_to']
