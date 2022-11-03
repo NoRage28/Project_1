@@ -11,6 +11,8 @@ class UserActivityCase(APITestCase):
 
     def setUp(self) -> None:
         self.user = User.objects.create_user(username='TestUser', password='1357246max')
+
+    def test_user_activity(self):
         auth_url = reverse('token_obtain_pair')
         self.access_token = self.client.post(auth_url, {
             'username': 'TestUser',
@@ -18,13 +20,12 @@ class UserActivityCase(APITestCase):
         }).data.get('access')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
-    def test_user_activity(self):
-        url = reverse('post-list')
+        post_create_url = reverse('post-list')
         data = {
             'title': 'title_text',
             'content': 'content_text'
         }
-        self.client.post(url, data, format='json')
+        self.client.post(post_create_url, data, format='json')
         url = reverse('activity-detail', kwargs=({'pk': self.user.id}))
 
         response = self.client.get(url, data, format='json')

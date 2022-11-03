@@ -7,11 +7,8 @@ from freezegun import freeze_time
 
 
 class PostTestCase(APITestCase):
-    @freeze_time('2022-10-27')
     def setUp(self) -> None:
         self.user = User.objects.create_user(username='TestUser', password='1357246max')
-        self.post = Post.objects.create(title='TestTitle', content='TestContent', author=self.user)
-        self.like = Like.objects.create(author=self.user, post=self.post)
         self.client.force_authenticate(user=self.user)
 
     def test_post_create(self):
@@ -22,10 +19,20 @@ class PostTestCase(APITestCase):
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Post.objects.all().count(), 1)
         self.assertEqual(Post.objects.last().title, 'title_text')
         self.assertEqual(Post.objects.last().content, 'content_text')
 
-    def test_like_create(self):
+
+class LikeTestCase(APITestCase):
+    @freeze_time('2022-10-27')
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(username='TestUser', password='1357246max')
+        self.post = Post.objects.create(title='TestTitle', content='TestContent', author=self.user)
+        self.like = Like.objects.create(author=self.user, post=self.post)
+        self.client.force_authenticate(user=self.user)
+
+    def test_like_post(self):
         post = Post.objects.create(author=self.user, title='post', content='content')
         url = reverse('post-like_create', kwargs={'pk': post.pk})
         response = self.client.post(url, format='json')
@@ -33,7 +40,7 @@ class PostTestCase(APITestCase):
         self.assertEqual(Like.objects.last().author, self.user)
         self.assertEqual(Like.objects.last().post, post)
 
-    def test_like_remove(self):
+    def test_unlike_post(self):
         url = reverse('post-like_remove', kwargs={'pk': self.like.pk})
         response = self.client.post(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

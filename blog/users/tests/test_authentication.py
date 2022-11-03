@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 
 
-class UserSignUpCase(APITestCase):
+class UserSignUpTestCase(APITestCase):
     def test_signup_user(self):
         url = reverse('auth_register')
         data = {'username': 'third_user',
