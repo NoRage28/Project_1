@@ -18,12 +18,12 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], url_name='like_create')
     def like(self, request, pk):
         like_post(user=request.user, post_id=pk)
-        return Response("Like successfully added")
+        return Response("Like successfully added", status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], url_name='like_remove')
     def unlike(self, request, pk):
         unlike_post(user=request.user, post_id=pk)
-        return Response("Like successfully removed")
+        return Response("Like successfully removed", status=status.HTTP_204_NO_CONTENT)
 
 
 class LikeViewSet(
