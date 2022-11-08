@@ -36,14 +36,14 @@ class LikeTestCase(APITestCase):
         post = Post.objects.create(author=self.user, title='post', content='content')
         url = reverse('post-like_create', kwargs={'pk': post.pk})
         response = self.client.post(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Like.objects.last().author, self.user)
         self.assertEqual(Like.objects.last().post, post)
 
     def test_unlike_post(self):
         url = reverse('post-like_remove', kwargs={'pk': self.like.pk})
         response = self.client.post(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Like.objects.count(), 0)
 
     def test_like_analytics(self):
