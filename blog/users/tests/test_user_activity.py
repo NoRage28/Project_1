@@ -10,7 +10,7 @@ from users.models import UserActivity
 class UserActivityCase(APITestCase):
 
     def setUp(self) -> None:
-        self.user = User.objects.create_users(username='TestUser', password='1357246max')
+        self.user = User.objects.create_user(username='TestUser', password='1357246max')
 
     def test_user_activity(self):
         auth_url = reverse('token_obtain_pair')

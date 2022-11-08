@@ -8,7 +8,7 @@ from freezegun import freeze_time
 
 class PostTestCase(APITestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create_users(username='TestUser', password='1357246max')
+        self.user = User.objects.create_user(username='TestUser', password='1357246max')
         self.client.force_authenticate(user=self.user)
 
     def test_post_create(self):
@@ -27,7 +27,7 @@ class PostTestCase(APITestCase):
 class LikeTestCase(APITestCase):
     @freeze_time('2022-10-27')
     def setUp(self) -> None:
-        self.user = User.objects.create_users(username='TestUser', password='1357246max')
+        self.user = User.objects.create_user(username='TestUser', password='1357246max')
         self.post = Post.objects.create(title='TestTitle', content='TestContent', author=self.user)
         self.like = Like.objects.create(author=self.user, post=self.post)
         self.client.force_authenticate(user=self.user)
@@ -36,14 +36,14 @@ class LikeTestCase(APITestCase):
         post = Post.objects.create(author=self.user, title='post', content='content')
         url = reverse('post-like_create', kwargs={'pk': post.pk})
         response = self.client.post(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Like.objects.last().author, self.user)
         self.assertEqual(Like.objects.last().post, post)
 
     def test_unlike_post(self):
         url = reverse('post-like_remove', kwargs={'pk': self.like.pk})
         response = self.client.post(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Like.objects.count(), 0)
 
     def test_like_analytics(self):
